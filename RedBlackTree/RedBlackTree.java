@@ -41,6 +41,8 @@ public class RedBlackTree {
         BinaryTreeNode parent = null;
         while((parent = searchParent(null, root, node.getData())) != null && isRed(parent)){
             gparent = searchParent(null, root, parent.getData());
+            BinaryTreeNode changeParent = searchParent(null,root, gparent.getData());
+
             //若“父节点”是“祖父节点的左孩子”
             if (parent.equals(gparent.getLeftChild())) {
                 // Case 1条件：叔叔节点是红色
@@ -59,12 +61,11 @@ public class RedBlackTree {
                     gparent.setLeftChild(parent);
                 }
                 // Case 3条件：叔叔是黑色，且当前节点是左孩子。
-                setBlack(node);
-                setRed(parent);
+                setBlack(parent);
+                setRed(gparent);
                 node = leftChange(gparent);
-                BinaryTreeNode changeParent = searchParent(null,root, gparent.getData());
                 if (changeParent != null){
-                    if (changeParent.getLeftChild().equals(gparent)){
+                    if (changeParent.getLeftChild().equals(node.getRightChild())){
                         changeParent.setLeftChild(node);
                     }else {
                         changeParent.setRightChild(node);
@@ -72,6 +73,7 @@ public class RedBlackTree {
                 } else {
                     this.root = node;
                 }
+                break;
             } else {    //若“z的父节点”是“z的祖父节点的右孩子”
                 // Case 1条件：叔叔节点是红色
                 BinaryTreeNode uncle = gparent.getLeftChild();
@@ -89,20 +91,23 @@ public class RedBlackTree {
                     gparent.setRightChild(parent);
                 }
                 // Case 3条件：叔叔是黑色，且当前节点是右孩子。
-                setBlack(node);
-                setRed(parent);
+                setBlack(parent);
+                setRed(gparent);
                 node = rightChange(gparent);
-                BinaryTreeNode changeParent = searchParent(null,root, gparent.getData());
+
                 if (changeParent != null){
-                    if (changeParent.getLeftChild().equals(gparent)){
+                    if (changeParent.getLeftChild().equals(node.getLeftChild())){
                         changeParent.setLeftChild(node);
                     }else {
                         changeParent.setRightChild(node);
                     }
+                    //System.out.println("*****" + changeParent.getData() +"*************" );
+                    //System.out.println("*****" + changeParent.getLeftChild().getData()+"--------" + changeParent.getRightChild().getData()+"*************" );
 
                 } else {
                     this.root = node;
                 }
+                break;
             }
 
         }
