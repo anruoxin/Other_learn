@@ -1,6 +1,8 @@
-package anruoxin.img;
+package anruoxin.itc;
 
-import java.io.File;
+import anruoxin.itc.excel.ExcelUtil;
+import anruoxin.itc.img.ImgUtil;
+import anruoxin.itc.img.Picture;
 
 /***
  *      ┌─┐       ┌─┐
@@ -26,16 +28,13 @@ import java.io.File;
  *                神兽保佑
  *               代码无BUG!
  * @author anruoxin
- * @date 2019/5/20 16:13
+ * @date 2019/5/20 16:09
 */
-public class ImgUtil {
-    public static Picture getColor(String filePath){
-        JpgFactory jpgFactory = new JpgFactory();
-        Picture picture =jpgFactory.readImg(new File(filePath));
-        return picture;
-    }
-    public static void main(String[] args) {
-        String filePath = "e:/itc_img/b.jpeg";
-
+public class Main
+{
+    public static void main( String[] args ) {
+        String filePath = "e:/itc_img/e.jpg";
+        Picture picture = ImgUtil.getColor(filePath);
+        ExcelUtil.getImgExcelWithXLSX(picture);
     }
 }
