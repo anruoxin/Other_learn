@@ -13,8 +13,135 @@ public class RedBlackTree {
         this.root = root;
     }
 
-    public void delete(int data){
+    public void remove(int data){
+        BinaryTreeNode node = searchNode(data);
+        this.root = remove(this.root, node);
+    }
 
+    public BinaryTreeNode searchNode(int data){
+        BinaryTreeNode node = searchNode(this.root, data);
+        if (node == null){
+            System.out.println("无删除的节点");
+            return null;
+        }
+        return node;
+    }
+
+    public BinaryTreeNode searchNode(BinaryTreeNode node, int data){
+        if(node == null) {
+            return null;
+        }else if(node.getData() == data) {
+            return node;
+        }else if(data > node.getData()) {
+            return searchNode(node.getRightChild(), data);
+        }else {
+            return searchNode(node.getLeftChild(), data);
+        }
+    }
+
+    public BinaryTreeNode remove(BinaryTreeNode root, BinaryTreeNode node){
+        BinaryTreeNode nodePanent = searchParent(null, root, node.getData());
+        if (node.getLeftChild() != null && node.getRightChild() != null){
+            BinaryTreeNode leftMaxNode = node.getLeftChild();
+            while(leftMaxNode.getRightChild() != null){
+                leftMaxNode = leftMaxNode.getRightChild();
+            }
+            BinaryTreeNode leftMaxChildNode = leftMaxNode.getLeftChild();
+            BinaryTreeNode leftMaxPanentNode = searchParent(null, root, leftMaxNode.getData());
+            node.setData(leftMaxNode.getData());
+
+            // 改为待删除的节点;
+            node = leftMaxNode;
+            if (isRed(node)){
+                leftMaxPanentNode.setRightChild(leftMaxChildNode);
+            } else {
+                // 当前节点是黑色的，子节点是红色，直接将子节点改为黑色的
+                if (isRed(leftMaxChildNode)){
+                    leftMaxChildNode.setColor(ColorEnum.BLACK);
+                    leftMaxPanentNode.setRightChild(leftMaxChildNode);
+                } else {
+                    balanceRemove(node);
+                }
+            }
+        } else if(node.getLeftChild() != null){
+            // 删除的节点的左子树不为空
+            BinaryTreeNode childNode = null;
+            if (isRed(node)){
+                // 当前节点是红色，直接删除
+                childNode = node.getLeftChild();
+            } else {
+                // 当前节点是黑色，且孩子节点是红色，直接将孩子节点变为黑色
+                if (isRed(node.getLeftChild())){
+                    node.getLeftChild().setColor(ColorEnum.BLACK);
+                    childNode = node.getLeftChild();
+                } else {
+                    // 当前节点是黑色，且孩子节点是黑色
+                    childNode = balanceRemove(node);
+                }
+            }
+            if (nodePanent.getLeftChild().equals(node)){
+                nodePanent.setLeftChild(childNode);
+            } else {
+                nodePanent.setRightChild(childNode);
+            }
+        } else if(node.getRightChild() != null){
+            // 删除的节点的右子树不为空
+            BinaryTreeNode childNode = null;
+            if (isRed(node)){
+                // 当前节点是红色，直接删除
+                childNode = node.getRightChild();
+            } else {
+                // 当前节点是黑色，且孩子节点是红色，直接将孩子节点变为黑色
+                if (isRed(node.getRightChild())){
+                    node.getRightChild().setColor(ColorEnum.BLACK);
+                    childNode = node.getRightChild();
+                } else {
+                    // 当前节点是黑色，且孩子节点是黑色
+                    childNode = balanceRemove(node);
+                }
+            }
+            if (nodePanent.getLeftChild().equals(node)){
+                nodePanent.setLeftChild(childNode);
+            } else {
+                nodePanent.setRightChild(childNode);
+            }
+        } else {
+            if (nodePanent.getLeftChild().equals(node)){
+                nodePanent.setLeftChild(null);
+            } else {
+                nodePanent.setRightChild(null);
+            }
+        }
+
+    }
+
+    public BinaryTreeNode balanceRemove(BinaryTreeNode node){
+
+
+        while ((node == null || !isRed(node)) && node != this.root ){
+            BinaryTreeNode parentNode = searchParent(null, this.root, node.getData());
+            if (parentNode.getLeftChild().equals(node)){
+                BinaryTreeNode brotherNode = parentNode.getRightChild();
+
+
+
+            } else {
+
+            }
+        }
+//        BinaryTreeNode parentNode = searchParent(null, root, node.getData());
+//        BinaryTreeNode gParentNode = null;
+//        BinaryTreeNode uncleNode = null;
+//        if (parentNode != null){
+//            gParentNode = searchParent(null, root, parentNode.getData());
+//            if (gParentNode.getRightChild().equals(parentNode)){
+//                uncleNode = gParentNode.getLeftChild();
+//            } else {
+//                uncleNode = gParentNode.getRightChild();
+//            }
+//        }
+
+        return  null;
     }
 
     public void insert(int data){
